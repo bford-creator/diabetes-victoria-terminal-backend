@@ -7,7 +7,13 @@ require 'sinatra/cross_origin'
 
 # CORS configuration
 configure do
-  enable :cross_origin
+  set :host_authorization, {
+    permitted_hosts: [
+      "example-terminal-backend-4to6.onrender.com",
+      "localhost",
+      "127.0.0.1"
+    ]
+  }
 end
 
 before do
