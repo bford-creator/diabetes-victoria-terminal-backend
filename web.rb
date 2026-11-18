@@ -14,6 +14,7 @@ configure do
   set :host_authorization, {
     permitted_hosts: [
       "example-terminal-backend-4to6.onrender.com",
+      "dv-donation-terminal-production.onrender.com",
       "localhost",
       "127.0.0.1"
     ]
