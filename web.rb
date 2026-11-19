@@ -67,22 +67,29 @@ end
 # API KEY VALIDATION
 # ============================================================
 
+
 def validateApiKey
+  stripe_env = ENV.fetch('STRIPE_ENV', 'test').downcase
 
-  if Stripe.api_key.nil? || Stripe.api_key.empty?
-    return "Error: you provided an empty secret key. Please provide your test mode secret key."
+  unless ['test', 'production'].include?(stripe_env)
+    return "Invalid STRIPE_ENV setting. Use 'test' or 'production'."
   end
 
-  if Stripe.api_key.start_with?('pk')
-    return "Error: you used a publishable key. Please use your secret key."
+  secret_key = Stripe.api_key
+
+  if secret_key.nil? || secret_key.empty?
+    return "Stripe secret key is missing."
   end
 
-  if Stripe.api_key.start_with?('sk_live')
-    return "Error: you used a live mode secret key. This example backend is configured for test mode."
+  expected_prefix = stripe_env == 'production' ? 'sk_live_' : 'sk_test_'
+
+  unless secret_key.start_with?(expected_prefix)
+    return "Stripe API key does not match the configured environment (#{stripe_env})."
   end
 
-  return nil
+  nil
 end
+
 
 
 # ============================================================
